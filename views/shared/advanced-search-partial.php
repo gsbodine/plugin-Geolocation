@@ -14,23 +14,39 @@ if (empty($radius)) {
 
 
 ?>
+<div class="row">
+    <div class="span8">
+        <fieldset> 
+            <legend><i class="icon-globe"></i> Location Search</legend>
+            <div class="row">
+                <div class="span4">
+                    <div class="field">
+                        <?php echo $this->formLabel('geolocation-address', __('Location')); ?>
+                        <div class="inputs">
+                            <?php echo $this->formText('geolocation-address',  $address, array('name'=>'geolocation-address','placeholder' => 'e.g. City, State','id'=>'geolocation-address','class'=>'textinput span3')); ?>
+                            <?php echo $this->formHidden('geolocation-latitude', $currentLat, array('name'=>'geolocation-latitude','id'=>'geolocation-latitude')); ?>
+                            <?php echo $this->formHidden('geolocation-longitude', $currentLng, array('name'=>'geolocation-longitude','id'=>'geolocation-longitude')); ?>
+                            <?php echo $this->formHidden('geolocation-radius', $radius, array('name'=>'geolocation-radius','id'=>'geolocation-radius')); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="field">
+                            <?php echo $this->formLabel('geolocation-radius', __('Radius from location (in miles)')); ?>
+                            <div class="inputs">
+                            <?php echo $this->formText('geolocation-radius', $radius, array('name'=>'geolocation-radius','id'=>'geolocation-radius','class'=>'textinput span3')); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="span4">
 
-<div class="field">
-    <?php echo $this->formLabel('geolocation-address', __('Geographic Address')); ?>
-    <div class="inputs">
-        <?php echo $this->formText('geolocation-address',  $address, array('name'=>'geolocation-address','size' => '40','id'=>'geolocation-address','class'=>'textinput')); ?>
-        <?php echo $this->formHidden('geolocation-latitude', $currentLat, array('name'=>'geolocation-latitude','id'=>'geolocation-latitude')); ?>
-        <?php echo $this->formHidden('geolocation-longitude', $currentLng, array('name'=>'geolocation-longitude','id'=>'geolocation-longitude')); ?>
-        <?php echo $this->formHidden('geolocation-radius', $radius, array('name'=>'geolocation-radius','id'=>'geolocation-radius')); ?>
+                </div>
+            </div>
     </div>
 </div>
 
-<div class="field">
-	<?php echo $this->formLabel('geolocation-radius', __('Geographic Radius (miles)')); ?>
-	<div class="inputs">
-        <?php echo $this->formText('geolocation-radius', $radius, array('name'=>'geolocation-radius','size' => '40','id'=>'geolocation-radius','class'=>'textinput')); ?>
-    </div>
-</div>
+
+
 
 <script type="text/javascript">
     jQuery(document).ready(function() {
