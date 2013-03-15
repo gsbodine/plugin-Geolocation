@@ -36,8 +36,8 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
     public function setUp()
     {
         if(plugin_is_active('Contribution')) {
-            $this->_hooks[] = 'contribution_append_to_type_form';
-            $this->_hooks[] = 'contribution_save_form';
+            $this->_hooks[] = 'contribution_type_form';
+            //$this->_hooks[] = 'contribution_save_form';
         }
         parent::setUp();
     }
@@ -166,9 +166,8 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
     
     public function hookAfterSaveItem($args)
     {
-        $post = $args['post'];
+        $post = $_POST;
         $item = $args['record'];   
-
         // If we don't have the geolocation form on the page, don't do anything!
         if (!$post['geolocation']) {
             return;
@@ -226,7 +225,7 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
                             && $controller == 'contribution' 
                             && $action == 'contribute' 
                             && get_option('geolocation_add_map_to_contribution_form') == '1')
-                         || ($controller == 'items'))  {
+                         || ($controller == 'items') )  {
             queue_css_file('geolocation-items-map');
             queue_css_file('geolocation-marker');
             queue_js_url("http://maps.google.com/maps/api/js?sensor=false");
@@ -241,7 +240,7 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
         $location = $this->_db->getTable('Location')->findLocationByItem($item, true);
 
         if ($location) {
-            $width = get_option('geolocation_item_map_width') ? get_option('geolocation_item_map_width') : '100%';
+            $width = get_option('geolocation_item_map_width') ? get_option('geolocation_item_map_width') : '';
             $height = get_option('geolocation_item_map_height') ? get_option('geolocation_item_map_height') : '300px';            
             $html = "<hr /><div id='geolocation'>";
             $html .= '<h4><i class="icon-globe"></i> Location</h4>';
@@ -273,7 +272,7 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
     {
         $db = $this->_db;
         $select = $args['select'];
-        
+        $alias = $this->_db->getTable('Location')->getTableAlias();
         if(isset($args['params']['geolocation-address'])) {
             
             
@@ -283,14 +282,12 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
             $currentLng = trim($args['params']['geolocation-longitude']);
             $radius = trim($args['params']['geolocation-radius']);
         
-            //$alias = $this->getTableAlias();
+            
             if ( (isset($args['params']['only_map_items']) && $args['params']['only_map_items'] ) || $address != '') {
                 //INNER JOIN the locations table
 
-                if(!$select->hasJoin('locations')) {
-                    $select->joinInner(array('locations' => $db->Location), "locations.item_id = items.id",
-                                array('latitude', 'longitude', 'address'));                    
-                }
+                $select->joinInner(array($alias => $db->Location), "$alias.item_id = items.id",
+                            array('latitude', 'longitude', 'address'));                    
             }
             // Limit items to those that exist within a geographic radius if an address and radius are provided
             if ($address != '' && is_numeric($currentLat) && is_numeric($currentLng) && is_numeric($radius)) {
@@ -302,7 +299,12 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
                 //ORDER by the closest distances
                 $select->order('distance');
             }
+        } else if( isset($args['params']['only_map_items'])) {
+            
+            $select->joinInner(array($alias => $db->Location), "$alias.item_id = items.id",
+                    array());            
         }
+        
     }
         
     public function filterAdminNavigationMain($navArray)
@@ -347,12 +349,24 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
         return $navArray;        
     }     
     
+    public function hookContributionTypeForm($args)
+    {
+        $contributionType = $args['type'];
+        echo $this->_mapForm(null, 'Find A Geographic Location For The ' . $contributionType->display_name . ':', false );
+    }
+    
     // Below added for CrowdEd -- there's prolly a better way to do this, but I need this to work now - gsb
     public function displayMapForm($item) {
         $html = $this->_mapForm($item,$label='Enter a location and press the Mark button');
         return $html;
     }
+    
 
+    public function hookSaveContributionForm($args)
+    {
+        
+    }
+    
     /**
      * Returns the form code for geographically searching for items
      * @param Item $item
@@ -391,18 +405,17 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
         }
         
         $html .= '<div class="field">';
-        $html .=     '<div id="location_form" style="margin-bottom: 1em;>';
+        $html .=     '<div id="location_form" class="span2">';
         $html .=         '<input type="hidden" name="geolocation[latitude]" value="' . $lat . '" />';
         $html .=         '<input type="hidden" name="geolocation[longitude]" value="' . $lng . '" />';
         $html .=         '<input type="hidden" name="geolocation[zoom_level]" value="' . $zoom . '" />';
         $html .=         '<input type="hidden" name="geolocation[map_type]" value="Google Maps v' . GOOGLE_MAPS_API_VERSION . '" />';
-        $html .=         '<i class="icon-globe"></i> <label style="display:inline;" for="omeka-map-form">Location</label> ';
-        $html .=         ' <a class="helpText" href="#" rel="tooltip" title="<p>Where was this document sent from?</p><p>We&rsquo;re interested in the location of the author. If it is provided, enter it using the format <em>City, State or City, Country</em></p>" data-placement="right"><i class="icon-question-sign"></i></a>';
+        $html .=         '<label>' . html_escape($label) . '</label>';
         $html .=     '</div>';
         $html .=     '<div class="inputs">';
         $html .=          '<div class="input-block">';
-        $html .=            '<input type="text" name="geolocation[address]" id="geolocation_address" value="' . $addr . '" class="textinput span5" placeholder="e.g. City, State" />';
-        $html .=            '<button type="button" class="btn btn-success pull-right" name="geolocation_find_location_by_address" id="geolocation_find_location_by_address"><i class="icon-map-marker"></i> Mark</button>';        
+        $html .=            '<input type="text" name="geolocation[address]" id="geolocation_address" value="' . $addr . '" class="textinput"/>';
+        $html .=            '<button type="button" class="btn btn-success" name="geolocation_find_location_by_address" id="geolocation_find_location_by_address">Mark</button>';        
         $html .=          '</div>';
         $html .=     '</div>';
         $html .= '</div>';
