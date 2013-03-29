@@ -26,6 +26,7 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
     
     protected $_filters = array(
             'admin_navigation_main',
+            'public_navigation_main',
             'response_contexts',
             'action_contexts',
             'admin_items_form_tabs',
@@ -313,6 +314,12 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
         return $navArray;        
     }
     
+    public function filterPublicNavigationMain($navArray)
+    {
+        $navArray['Geolocation'] = array('label'=>'Map', 'uri'=>url('geolocation/map/browse'));
+        return $navArray;        
+    }
+    
     public function filterResponseContexts($contexts)
     {
         $contexts['kml'] = array('suffix'  => 'kml',
@@ -405,21 +412,22 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
         }
         
         $html .= '<div class="field">';
-        $html .=     '<div id="location_form" class="span2">';
+        $html .=     '<div id="location_form">';
         $html .=         '<input type="hidden" name="geolocation[latitude]" value="' . $lat . '" />';
         $html .=         '<input type="hidden" name="geolocation[longitude]" value="' . $lng . '" />';
         $html .=         '<input type="hidden" name="geolocation[zoom_level]" value="' . $zoom . '" />';
         $html .=         '<input type="hidden" name="geolocation[map_type]" value="Google Maps v' . GOOGLE_MAPS_API_VERSION . '" />';
-        $html .=         '<label>' . html_escape($label) . '</label>';
+        $html .=         '<div class="person-name-set-label"><i class="icon-globe"></i> Location <a href="#" rel="tooltip" class="tooltipper" title="Where was this document sent from? Help us identify the location of the author."><i class="icon-info-sign"></i></a></div>';
+        $html .=         '<label class="text-success">' . html_escape($label) . '</label>';
         $html .=     '</div>';
         $html .=     '<div class="inputs">';
         $html .=          '<div class="input-block">';
-        $html .=            '<input type="text" name="geolocation[address]" id="geolocation_address" value="' . $addr . '" class="textinput"/>';
-        $html .=            '<button type="button" class="btn btn-success" name="geolocation_find_location_by_address" id="geolocation_find_location_by_address">Mark</button>';        
+        $html .=            '<input type="text" name="geolocation[address]" id="geolocation_address" value="' . $addr . '" class="textinput span5" placeholder="e.g., City, State, Country" />';
+        $html .=            '<button type="button" class="btn btn-success pull-right" name="geolocation_find_location_by_address" id="geolocation_find_location_by_address"><i class="icon-map-marker"></i> Mark</button>';        
         $html .=          '</div>';
         $html .=     '</div>';
         $html .= '</div>';
-        $html .= '<div  id="omeka-map-form" style="width: 100%; height: 300px"></div>';
+        $html .= '<div  id="omeka-map-form" style="width: 100%; height: 250px"></div>';
         
         
         $options = array();
