@@ -7,8 +7,8 @@
             <BalloonStyle>
                 <text><![CDATA[
                     <div class="geolocation_balloon">
-                        <div class="geolocation_balloon_title">$[namewithlink]</div>
                         <div class="body">$[description]</div>
+                        <div class="geolocation_balloon_title">$[namewithlink]</div>
                         <div class="geolocation_balloon_description">$[Snippet]</div>
                     </div>
                 ]]></text>
@@ -20,7 +20,7 @@
         ?>
         <Placemark>
             <name><![CDATA[<?php echo metadata('item', array('Dublin Core', 'Title'));?>]]></name>
-            <namewithlink><![CDATA[<?php echo link_to_item(metadata('item' , array('Dublin Core', 'Title')), array('class' => 'view-item')); ?>]]></namewithlink>
+            <namewithlink><![CDATA[<?php echo link_to_item(metadata('item' , array('Dublin Core', 'Title')), array('class' => 'map-view-item')); ?>]]></namewithlink>
             <Snippet maxLines="2"><![CDATA[<?php
             echo metadata('item', array('Dublin Core', 'Description'), array('snippet' => 150));
             ?>]]></Snippet>    
@@ -29,7 +29,7 @@
             // so can't use display_files(). Description field contains the HTML 
             // for displaying the first file (if possible).
             if (metadata($item, 'has thumbnail')) {
-                echo link_to_item(item_image('thumbnail'), array('class' => 'view-item'));                
+                echo link_to_item(item_image('thumbnail'), array('class' => 'map-view-item pull-left'));                
             }
             ?>]]></description>
             <Point>

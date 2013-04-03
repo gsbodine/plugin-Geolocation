@@ -6,7 +6,7 @@
             #map_browse {
                 height: 436px;
             }
-            .balloon {width:400px !important; font-size:1.2em;}
+            .balloon {width:200px !important; font-size:1.2em;}
             .balloon .title {font-weight:bold;margin-bottom:1.5em;} 
             .balloon .title, .balloon .description {float:left; width: 220px;margin-bottom:1.5em;}
             .balloon img {float:right;display:block;}

@@ -27,7 +27,7 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_filters = array(
             'admin_navigation_main',
             'public_navigation_main',
-            'response_contexts',
+            'response_contexts', 
             'action_contexts',
             'admin_items_form_tabs',
             'public_navigation_items'            

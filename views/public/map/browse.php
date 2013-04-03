@@ -7,9 +7,8 @@ $css = "
             #map_browse {
                 height: 436px;
             }
-            .balloon {width:400px !important; font-size:1.2em;}
+            .balloon {width:200px !important; font-size:1.2em;}
             .balloon .title {font-weight:bold;margin-bottom:1.5em;}
-            .balloon .title, .balloon .description {float:left; width: 220px;margin-bottom:1.5em;}
             .balloon img {float:right;display:block;}
             .balloon .view-item {display:block; float:left; clear:left; font-weight:bold; text-decoration:none;}
             #map-links a {
@@ -29,7 +28,7 @@ echo head(array('title' => __('Browse Map'),'bodyid'=>'map','bodyclass' => 'brow
     <?php echo public_nav_items()->setUlClass('nav nav-pills'); ?>
 </nav>
 
-<div class="pagination">
+<div class="pagination text-center">
     <?php echo pagination_links(); ?>
 </div><!-- end pagination -->
 
@@ -40,8 +39,15 @@ echo head(array('title' => __('Browse Map'),'bodyid'=>'map','bodyclass' => 'brow
 </div><!-- end map_block -->
 
 <div id="link_block">
-    <div id="map-links"><h2>Find An Item on the Map</h2></div><!-- Used by JavaScript -->
+    <div id="map-links"><p class="lead text-center"><i class="icon-map-marker"></i> Locate An Item on the Map</p></div><!-- Used by JavaScript -->
 </div><!-- end link_block -->
+
+<div class="row">
+    <?php 
+        // calling view helper in Crowd-Ed
+        echo $this->maps()->maps_search_form(array('id'=>'search'), $_SERVER['REQUEST_URI']); 
+    ?>
+</div>
 
 </div><!-- end primary -->
 

@@ -9,7 +9,7 @@
 
 #map-links ul {
     margin-left:0;
-    padding: 0;
+    padding: 0 10px 0 0;
 }
 
 #map-links li {
@@ -17,13 +17,16 @@
     width: 100% !important;
     display: inline-block;
     border-radius: 3px;
-    background-color: #303030;
+    background-color: #f5f5f5;
     padding: 5px;
     box-sizing: border-box;
     margin-bottom: 10px;
 }
     
-#map-links { padding: 10px !important; }
+#map-links { 
+    padding: 10px !important; 
+    color: #333;
+}
 
 #map-links li a {
     display:block;
@@ -31,13 +34,9 @@
     border-bottom: 0 !important;
 }
 
-#map-links li a:link {
-    color: #f7f7f7 !important;
-}
-
 #link_block {
     margin-bottom: 40px;
-    background-color: #4B4B4B;
+    background-color: #fff;
     color: white;
 }
 
@@ -66,7 +65,7 @@ div.map-notification {
         box-sizing: border-box !important;
         height: 436px;
         width: 30%;
-        background-color: #4B4B4B !important;
+        background-color: #fff !important;
         float: left;
         color: white;
         overflow-y: auto;

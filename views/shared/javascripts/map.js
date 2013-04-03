@@ -25,7 +25,7 @@ OmekaMap.prototype = {
         
         if (bindHtml) {
             var infoWindow = new google.maps.InfoWindow({
-                content: bindHtml
+                content: bindHtml, maxWidth: 450
             });
 
             var that = this;
@@ -183,7 +183,7 @@ OmekaMapBrowse.prototype = {
     
     buildListLinks: function (container) {
         var that = this;
-        var list = jQuery('<ul></ul>');
+        var list = jQuery('<ul id="unstyled map-list"></ul>');
         list.appendTo(container);
 
         // Loop through all the markers
@@ -192,7 +192,7 @@ OmekaMapBrowse.prototype = {
 
             // Make an <a> tag, give it a class for styling
             var link = jQuery('<a></a>');
-            link.addClass('item-link');
+            link.addClass('map-item-link');
 
             // Links open up the markers on the map, clicking them doesn't actually go anywhere
             link.attr('href', 'javascript:void(0);');
