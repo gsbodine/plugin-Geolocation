@@ -364,7 +364,7 @@ class GeolocationPlugin extends Omeka_Plugin_AbstractPlugin
     
     // Below added for CrowdEd -- there's prolly a better way to do this, but I need this to work now - gsb
     public function displayMapForm($item) {
-        $html = $this->_mapForm($item,$label='Enter a location and press the Mark button');
+        $html = $this->_mapForm($item,$label='Enter the SENT FROM location and press the Mark button');
         return $html;
     }
     
